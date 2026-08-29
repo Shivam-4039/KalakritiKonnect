@@ -19,9 +19,15 @@ const userSchema = new mongoose.Schema(
                 district: { type: String, default: '' },
                 state: { type: String, default: '' },
                 pincode: { type: String, default: '' },
+                isVerified: { type: Boolean, default: false },
             },
             giTag: { type: String, default: '' },
+            shg: {
+                name: { type: String, default: '' },
+                isVerified: { type: Boolean, default: false },
+            },
             shgName: { type: String, default: '' },
+            isSHGMember: { type: Boolean, default: false },
             bankDetails: {
                 accountNumber: { type: String, default: '' },
                 ifscCode: { type: String, default: '' },
@@ -55,11 +61,10 @@ const userSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-userSchema.pre('save', async function (next) {
-    if (!this.isModified('password') || !this.password) return next();
+userSchema.pre('save', async function () {
+    if (!this.isModified('password') || !this.password) return;
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    next();
 });
 
 userSchema.methods.comparePassword = async function (candidatePassword) {

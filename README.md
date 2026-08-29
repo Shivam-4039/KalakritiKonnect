@@ -1,38 +1,289 @@
-# 🎨 AI-Driven Market Linkage & Smart Cataloging Mobile Application for Marginalized Artisans
+# 🎨 KalakritiKonnect — AI-Driven Market Linkage & Smart Cataloging for Artisans
 
-> **Smart India Hackathon (SIH) Solution** | Backend API & AI Engine
+> **Smart India Hackathon (SIH) Solution** | Backend API, Demand Radar & AI Engine
 
-An AI-powered backend service designed to empower traditional Indian artisans by converting product photos into structured marketplace listings, suggesting fair market prices, and linking artisans directly with buyers.
+An enterprise-grade AI backend service designed to empower traditional Indian artisans by converting voice descriptions and craft photos into structured marketplace listings, protecting artisans with cryptographic Fair Price Shields, providing seasonal Demand Radar analytics, and authenticating heritage craft items.
 
 ---
 
-## 🚀 Features
+## 🌟 5 Core Innovation Features
 
-- **📸 AI Smart Cataloging**: Automatically extracts product category, craft technique, materials, region, and tags from a single image using Google Gemini AI.
-- **💰 Fair Price Suggestion**: Recommends minimum, maximum, and suggested retail prices to prevent artisan exploitation.
-- **🔐 Multi-Authentication**: Phone OTP authentication for artisans and email/password login for buyers.
-- **🛒 Order & Payment System**: Integrated Razorpay checkout flow and order management.
-- **📊 Artisan Dashboard**: Real-time sales analytics and product performance stats.
-- **💬 Real-Time Chat**: Socket.io integration for buyer-artisan communication.
+### 1. 🎙️ AI Voice / Transcript Cataloging
+- Converts spoken transcripts in **Hindi**, **Hinglish**, or **English** into structured marketplace catalogs using Google Gemini AI (`gemini-1.5-flash`).
+- Automatically extracts product names (in English & Hindi), categories, craft techniques, raw materials, estimated production cost, production timeline, region, and fair minimum price.
+- Issues a tamper-proof, **HMAC-signed catalog draft token** (`catalogDraftToken`) to prevent client-side tampering before confirmation.
+
+### 2. 🛡️ Fair Price Protection Shield & Draft Confirmation
+- Protects artisans from underpricing exploitation.
+- Server validates the signed `catalogDraftToken` to verify the original AI-evaluated fair minimum price (`aiMinPrice`).
+- If an artisan attempts to list an item below fair value, the API flags `isUnderpriced: true`, computes `fairPriceGap`, and issues a protective warning alert.
+
+### 3. 📡 Demand Radar Engine & Seasonal Insights
+- Aggregates 30-day time-series product views, wishlist additions, search trends, and completed sales.
+- Incorporates real-time **Indian festive & seasonal multipliers** (Diwali, Holi, Rakhi, Wedding/Winter season).
+- Generates actionable category demand scores, top rising search tags, recommended crafts to make, and localized Hindi insights (`insightSummaryHindi`).
+
+### 4. 🏛️ Heritage Authenticity Score & Badging
+- Computes an automated 0–100 **Authenticity Score** for every craft product dynamically.
+- Automatically assigns verified credibility badges:
+  - `GI Verified` / `GI Tag Declared` (+30 pts)
+  - `Direct Artisan` (+25 pts)
+  - `SHG Member` (Self-Help Group) (+20 pts)
+  - `Handmade Technique Identified` (+25 pts)
+  - `Fair Price Verified`
+
+### 5. 💬 WhatsApp Bot Multimodal Craft Cataloging
+- Enables marginalized artisans without smartphones or complex apps to list items via WhatsApp.
+- Features **SSRF-protected safe image ingestion** (blocks private networks, enforces 8 MB size limits, validates MIME types).
+- Processes craft photos using Gemini multimodal vision and generates instant localized WhatsApp confirmation messages with suggested price ranges and confirmation tokens.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Runtime**: Node.js
+- **Runtime**: Node.js (v18+)
 - **Framework**: Express.js
-- **Database**: MongoDB (Mongoose ODM)
+- **Database**: MongoDB (Mongoose ODM) with time-series daily analytics
 - **AI Engine**: Google Gemini API (`@google/generative-ai`)
-- **Image Storage**: Cloudinary
-- **Authentication**: JWT + Custom OTP Logic
-- **Payments**: Razorpay Node.js SDK
-- **Real-Time**: Socket.io
+- **Security & Integrity**: Crypto HMAC-SHA256 draft signatures, SSRF-safe URL validation, Helmet, Rate Limiting, JWT
+- **Real-Time Communication**: Socket.io
+- **Media & Payments**: Cloudinary SDK & Razorpay SDK
 
 ---
 
-## ⚡ Quick Setup for Teammates
+## ⚙️ Environment Configuration (`.env`)
 
-### 1. Clone the repository
+Create a `.env` file in the root folder with the following variables:
+
+```env
+# Server
+PORT=5000
+NODE_ENV=development
+JWT_SECRET=your_super_secret_jwt_key
+
+# Database
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/artisan-market?appName=Cluster0
+
+# Google Gemini AI
+GEMINI_API_KEY=your_google_gemini_api_key
+GEMINI_MODEL=gemini-1.5-flash
+
+# Cryptographic Draft & Bot Secrets
+CATALOG_DRAFT_SECRET=your_random_64_char_hex_secret_here
+WHATSAPP_BOT_SECRET=your_whatsapp_webhook_secret_here
+
+# Cloudinary Storage
+CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+CLOUDINARY_API_KEY=your_cloudinary_key
+CLOUDINARY_API_SECRET=your_cloudinary_secret
+
+# Razorpay Payments
+RAZORPAY_KEY_ID=rzp_test_your_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_secret
+```
+
+---
+
+## 🚀 Quick Start Guide
+
+### 1. Install Dependencies
 ```bash
-git clone https://github.com/Shivam-4039/KalakritiKonnect.git
-cd KalakritiKonnect
+npm install
+```
+
+### 2. Run the Development Server
+```bash
+npm run dev
+```
+
+### 3. Run in Production Mode
+```bash
+npm start
+```
+
+The API will be available at: `http://localhost:5000`
+
+---
+
+## 📚 API Reference & Endpoints
+
+### 1. Voice Cataloging
+- **Endpoint**: `POST /api/catalog/voice-catalog`
+- **Auth**: `Bearer <artisan_jwt>` (Role: `artisan`)
+- **Body**:
+```json
+{
+  "transcript": "Main Rajasthan se hoon. Maine mitti ka handmade terracotta diya banaya hai. Ek diya banane mein 40 rupaye lagte hain aur 2 din lagte hain.",
+  "language": "hi"
+}
+```
+- **Response**:
+```json
+{
+  "success": true,
+  "message": "Catalog draft generated successfully.",
+  "draftProductData": {
+    "productName": "Handcrafted Terracotta Diya",
+    "productNameHindi": "हस्तनिर्मित मिट्टी का दीया",
+    "category": "Pottery",
+    "craftTechnique": "Terracotta Pottery",
+    "materials": ["Clay", "Natural Colors"],
+    "estimatedCost": 40,
+    "sellingPrice": 150,
+    "productionDays": 2,
+    "region": "Rajasthan",
+    "aiMinPrice": 120
+  },
+  "catalogDraftToken": "eyJhbGciOiJIUzI1NiIs..."
+}
+```
+
+---
+
+### 2. Confirm Product Listing (with Fair Price Shield)
+- **Endpoint**: `POST /api/catalog/confirm`
+- **Auth**: `Bearer <artisan_jwt>` (Role: `artisan`)
+- **Body**:
+```json
+{
+  "catalogDraftToken": "eyJhbGciOiJIUzI1NiIs...",
+  "sellingPrice": 90,
+  "underpriceWarningDismissed": false,
+  "images": ["https://res.cloudinary.com/demo/image/upload/diya.jpg"],
+  "giTag": {
+    "name": "Rajasthan Terracotta",
+    "code": "GI-RAJ-01"
+  }
+}
+```
+- **Response**:
+```json
+{
+  "success": true,
+  "message": "Product listing confirmed successfully.",
+  "product": { ... },
+  "priceProtection": {
+    "aiMinPrice": 120,
+    "isUnderpriced": true,
+    "fairPriceGap": 30,
+    "underpriceWarningDismissed": false,
+    "warning": "Price is below fair market value of ₹120. Potential earnings loss."
+  }
+}
+```
+
+---
+
+### 3. Demand Radar & Seasonal Insights
+- **Endpoint**: `GET /api/market/demand-insights`
+- **Auth**: Public
+- **Response**:
+```json
+{
+  "success": true,
+  "trendingCategories": [
+    {
+      "category": "Pottery",
+      "demandScore": 450,
+      "avgSellingPrice": 350,
+      "searchGrowth": 45,
+      "views": 220,
+      "wishlistCount": 38,
+      "unitsSold": 24,
+      "seasonalMultiplier": 1.4
+    }
+  ],
+  "trendingSearchTags": [
+    { "tag": "diya", "count": 120, "growth": 65 },
+    { "tag": "terracotta", "count": 85, "growth": 30 }
+  ],
+  "recommendedCraftsToMake": [
+    "Terracotta Diyas",
+    "Handcrafted Terracotta Planters"
+  ],
+  "insightSummaryHindi": "Is mahine Pottery items ki maang 45% badhi hai. Diwali Season ke karan seasonal demand bhi badh rahi hai.",
+  "seasonalContext": {
+    "name": "Diwali Season",
+    "multiplier": 1.4
+  }
+}
+```
+
+---
+
+### 4. Product Details with Heritage Authenticity Score
+- **Endpoint**: `GET /api/products/:id`
+- **Auth**: Public
+- **Response**:
+```json
+{
+  "success": true,
+  "product": {
+    "_id": "65f123...",
+    "name": "Handcrafted Terracotta Diya",
+    "sellingPrice": 150,
+    "authenticityScore": 100,
+    "authenticityBadges": [
+      "GI Tag Declared",
+      "Direct Artisan",
+      "SHG Member",
+      "Handmade Technique Identified",
+      "Fair Price Verified"
+    ],
+    "artisan": {
+      "name": "Ramesh Kumar",
+      "phone": "+919876543210",
+      "artisanProfile": {
+        "story": "Generational potter practicing terracotta clay art.",
+        "location": { "district": "Jaipur", "state": "Rajasthan", "isVerified": true },
+        "isSHGMember": true
+      }
+    }
+  }
+}
+```
+
+---
+
+### 5. WhatsApp Bot Craft Image Ingestion
+- **Endpoint**: `POST /api/catalog/whatsapp-bot`
+- **Headers**: `x-whatsapp-bot-secret: your_whatsapp_webhook_secret_here`
+- **Body**:
+```json
+{
+  "phone": "+919876543210",
+  "imageUrl": "https://res.cloudinary.com/demo/image/upload/terracotta-pot.jpg",
+  "userLanguage": "hi"
+}
+```
+- **Response**:
+```json
+{
+  "success": true,
+  "artisanFound": true,
+  "whatsappReplyText": "*Artisan AI Assistant*\n\nNamaskar! Humne aapke utpad ko pehchan liya hai:\n\n*Naam:* Handcrafted Terracotta Pot\n*Uchit Mulya:* ₹450 - ₹600\n\nKya aap ise bazaar me bechna chahte hain? Confirm karne ke liye *HAAN* reply karein.",
+  "draftProductData": {
+    "productName": "Handcrafted Terracotta Pot",
+    "aiMinPrice": 450,
+    "suggestedPriceMin": 450,
+    "suggestedPriceMax": 600
+  },
+  "catalogDraftToken": "eyJhbGciOiJIUzI1NiIs..."
+}
+```
+
+---
+
+## 🔒 Security & Architecture Highlights
+
+1. **HMAC-SHA256 Signed Draft Tokens**: Fair price values cannot be altered on the client side; the server validates draft tokens using timing-safe cryptographic comparisons.
+2. **SSRF Protection**: Image URLs for the WhatsApp bot are strictly validated to block private IPv4/IPv6 ranges (e.g. `127.0.0.1`, `10.0.0.0/8`, `192.168.0.0/16`, `169.254.0.0/16`).
+3. **Public DNS SRV Fallback**: Configured with Google & Cloudflare DNS (`8.8.8.8`, `1.1.1.1`) to resolve MongoDB Atlas connections on Windows networks.
+4. **Time-Series Analytics Retention**: Daily demand analytics automatically prune records older than 90 days.
+
+---
+
+## 👨‍💻 Author & Maintainer
+
+- **Developer**: [Sidhant Gautam](https://github.com/Sidhant-Gautam-25)
+- **Repository**: [https://github.com/Sidhant-Gautam-25/kalakriti](https://github.com/Sidhant-Gautam-25/kalakriti)

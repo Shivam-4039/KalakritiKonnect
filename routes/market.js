@@ -1,36 +1,28 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Product = require('../models/Product');
-const Order = require('../models/Order');
-const { protect } = require('../middleware/auth');
 
-router.get('/recommendations', async (req, res, next) => {
-    try {
-        const products = await Product.find({ status: 'active' }).populate('artisan', 'name artisanProfile').limit(10);
-        res.json({ success: true, recommendations: products });
-    } catch (err) {
-        next(err);
-    }
-});
+const { protect } = require("../middleware/auth");
+const {
+  demandInsights,
+  getRecommendations,
+  getArtisanDashboard,
+} = require("../controllers/marketController");
 
-router.get('/artisan-dashboard', protect, async (req, res, next) => {
-    try {
-        const totalProducts = await Product.countDocuments({ artisan: req.user._id });
-        const orders = await Order.find({ 'items.artisan': req.user._id });
+/*
+FEATURE 3:
+GET /api/market/demand-insights
+Demand Radar Engine with seasonal multipliers & trending categories
+*/
+router.get("/demand-insights", demandInsights);
 
-        const totalRevenue = orders.reduce((sum, ord) => sum + ord.totalAmount, 0);
+/*
+Marketplace Product Recommendations
+*/
+router.get("/recommendations", getRecommendations);
 
-        res.json({
-            success: true,
-            stats: {
-                totalProducts,
-                totalOrders: orders.length,
-                totalRevenue,
-            },
-        });
-    } catch (err) {
-        next(err);
-    }
-});
+/*
+Artisan Dashboard Stats
+*/
+router.get("/artisan-dashboard", protect, getArtisanDashboard);
 
 module.exports = router;

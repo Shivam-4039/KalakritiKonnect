@@ -45,11 +45,10 @@ const orderSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-orderSchema.pre('save', function (next) {
+orderSchema.pre('save', function () {
     if (!this.orderNumber) {
         this.orderNumber = `ART-${Date.now().toString().slice(-6)}-${Math.floor(100 + Math.random() * 900)}`;
     }
-    next();
 });
 
 module.exports = mongoose.model('Order', orderSchema);
