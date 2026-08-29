@@ -1,0 +1,23 @@
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Environment variables and secrets
+.env
+*.env.local
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Data and uploaded files
+data/images/*
+!data/images/.gitkeep
+
+# IDE / Editor files
+.vscode/
+.idea/
+.DS_Store
