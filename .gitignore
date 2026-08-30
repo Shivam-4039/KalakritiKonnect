@@ -1,15 +1,29 @@
 # Node.js/Backend Dependencies
 node_modules/
 
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
 # Environment variables (NEVER commit secrets!)
 .env
 .env.*
 !.env.example
+*.env.local
 
-# Temporary uploads & storage
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Data and uploaded files
 uploads/
 temp/
 tmp/
+data/images/*
+!data/images/.gitkeep
 
 # Logs
 *.log
@@ -23,7 +37,6 @@ Thumbs.db
 
 # Miscellaneous
 *.class
-*.pyc
 *.swp
 .atom/
 .build/
@@ -33,14 +46,12 @@ Thumbs.db
 .swiftpm/
 migrate_working_dir/
 
-# IntelliJ related
+# IDE / Editor files
 *.iml
 *.ipr
 *.iws
 .idea/
-
-# VS Code config
-# .vscode/
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/

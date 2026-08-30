@@ -1,6 +1,6 @@
 # 🎨 KalakritiKonnect — AI-Driven Market Linkage & Smart Cataloging for Artisans
 
-> **Smart India Hackathon (SIH) Solution** | Complete Monorepo (Backend API & Flutter Frontend)
+> **Smart India Hackathon (SIH) Solution** | Complete Monorepo (Backend API, Flutter Frontend & Python AI Service)
 
 An enterprise-grade AI solution designed to empower traditional Indian artisans by converting voice descriptions and craft photos into structured marketplace listings, protecting artisans with cryptographic Fair Price Shields, providing seasonal Demand Radar analytics, and authenticating heritage craft items.
 
@@ -8,9 +8,10 @@ An enterprise-grade AI solution designed to empower traditional Indian artisans 
 
 ## 📁 Repository Structure
 
-This repository is organized as a monorepo containing both the backend service and the mobile client application:
-- **Backend API**: Node.js & Express application powered by Google Gemini AI, MongoDB, Socket.io, Cloudinary, and Razorpay.
-- **Frontend App**: Flutter mobile/desktop application for artisans and buyers.
+This repository is organized as a monorepo containing:
+- **Backend API (Node.js/Express)**: Express.js application powered by Google Gemini AI, MongoDB, Socket.io, Cloudinary, and Razorpay.
+- **Frontend App (Flutter)**: Flutter mobile/desktop application for artisans and buyers.
+- **AI Service (FastAPI/Python)**: FastAPI-based smart vision/image-processing cataloging service.
 
 ---
 
@@ -304,6 +305,77 @@ The API will be available at: `http://localhost:5000`
 2. **SSRF Protection**: Image URLs for the WhatsApp bot are strictly validated to block private IPv4/IPv6 ranges (e.g. `127.0.0.1`, `10.0.0.0/8`, `192.168.0.0/16`, `169.254.0.0/16`).
 3. **Public DNS SRV Fallback**: Configured with Google & Cloudflare DNS (`8.8.8.8`, `1.1.1.1`) to resolve MongoDB Atlas connections on Windows networks.
 4. **Time-Series Analytics Retention**: Daily demand analytics automatically prune records older than 90 days.
+
+---
+
+## 🐍 Python AI Service (FastAPI)
+
+FastAPI-based Python service for computer vision and advanced catalog generation tasks.
+
+### Project Structure
+
+```
+artisan-ai/
+│
+├── app/
+│   ├── main.py          # FastAPI app & endpoint handlers
+│   ├── vision.py        # Vision AI service abstraction layer
+│   ├── catalog.py       # Catalog generation service layer
+│   ├── schemas.py       # Pydantic data schemas
+│   └── config.py        # Environment variables & configuration
+│
+├── prompts/
+│   ├── product_analysis.txt   # Prompt template for product analysis
+│   └── catalog_generation.txt # Prompt template for catalog generation
+│
+├── data/
+│   └── images/          # Sample images storage
+│
+├── tests/               # Unit and integration test suite
+│
+├── .env                 # Environment secrets (ignored by git)
+├── .env.example         # Example environment template
+├── .gitignore
+├── requirements.txt     # Python project dependencies
+└── README.md
+```
+
+### Setup Instructions
+
+#### 1. Create and Activate Virtual Environment
+
+**Windows:**
+```powershell
+python -m venv venv
+.\venv\Scripts\activate
+```
+
+**Linux/macOS:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### 2. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+#### 3. Configure Secrets
+
+Copy `.env.example` to `.env` and fill in your API key:
+```bash
+cp .env.example .env
+```
+
+#### 4. Run Development Server
+
+```bash
+uvicorn app.main:app --reload --port 8000
+```
+
+Access API documentation at: `http://localhost:8000/docs`
 
 ---
 
