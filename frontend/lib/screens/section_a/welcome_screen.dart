@@ -113,7 +113,12 @@ class WelcomeScreen extends StatelessWidget {
               // --------------------------------------------------
               TextButton(
                 onPressed: () {
-                  // Login screen will be connected later.
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                  );
                 },
                 child: const Text(
                   'I already have an account',

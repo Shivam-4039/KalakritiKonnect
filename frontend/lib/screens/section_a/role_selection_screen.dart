@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
-
+import '../../services/api_service.dart';
 import '../artisan/artisan_dashboard.dart';
 import '../buyer/buyer_home.dart';
 
 class RoleSelectionScreen extends StatefulWidget {
-  const RoleSelectionScreen({super.key});
+  final String name;
+  final String phone;
+  final String password;
+
+  const RoleSelectionScreen({
+    super.key,
+    required this.name,
+    required this.phone,
+    required this.password,
+  });
 
   @override
   State<RoleSelectionScreen> createState() => _RoleSelectionScreenState();
 }
 
 class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
-  // ============================================================
-  // COLORS
-  // ============================================================
-
   static const Color background = Color(0xFFF8F5EC);
   static const Color terracotta = Color(0xFFBE7048);
   static const Color terracottaLight = Color(0xFFF5E8E0);
@@ -24,15 +29,8 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
   static const Color muted = Color(0xFF777777);
   static const Color border = Color(0xFFE1D9CC);
 
-  // ============================================================
-  // STATE
-  // ============================================================
-
   String? selectedRole;
-
-  // ============================================================
-  // BUILD
-  // ============================================================
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +43,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
 
             return Column(
               children: [
-                // ==================================================
-                // TOP BAR
-                // ==================================================
-
                 _buildTopBar(),
-
-                // ==================================================
-                // MAIN CONTENT
-                // ==================================================
                 Expanded(
                   child: SingleChildScrollView(
                     padding: EdgeInsets.fromLTRB(
@@ -65,10 +55,6 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ==========================================
-                        // HEADING
-                        // ==========================================
-
                         const Text(
                           'How will you use KalaKriti App?',
                           style: TextStyle(
@@ -77,19 +63,12 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                             color: dark,
                           ),
                         ),
-
                         const SizedBox(height: 7),
-
                         const Text(
                           'Choose the option that best describes you.',
                           style: TextStyle(fontSize: 16, color: muted),
                         ),
-
                         const SizedBox(height: 30),
-
-                        // ==========================================
-                        // ROLE CARDS
-                        // ==========================================
                         if (isSmallScreen)
                           Column(
                             children: [
@@ -101,14 +80,11 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                                 accentColor: terracotta,
                                 lightColor: terracottaLight,
                               ),
-
                               const SizedBox(height: 20),
-
                               _buildRoleCard(
                                 role: 'buyer',
                                 title: "I'm a Buyer",
-                                subtitle:
-                                    'Discover authentic handmade products',
+                                subtitle: 'Discover authentic handmade products',
                                 imagePath: 'assets/images/buyer_role.png',
                                 accentColor: green,
                                 lightColor: greenLight,
@@ -129,15 +105,12 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                                   lightColor: terracottaLight,
                                 ),
                               ),
-
                               const SizedBox(width: 24),
-
                               Expanded(
                                 child: _buildRoleCard(
                                   role: 'buyer',
                                   title: "I'm a Buyer",
-                                  subtitle:
-                                      'Discover authentic handmade products',
+                                  subtitle: 'Discover authentic handmade products',
                                   imagePath: 'assets/images/buyer_role.png',
                                   accentColor: green,
                                   lightColor: greenLight,
@@ -149,10 +122,6 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                     ),
                   ),
                 ),
-
-                // ==================================================
-                // CONTINUE BUTTON
-                // ==================================================
                 _buildContinueButton(),
               ],
             );
@@ -162,24 +131,17 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
     );
   }
 
-  // ============================================================
-  // TOP BAR
-  // ============================================================
-
   Widget _buildTopBar() {
     return SizedBox(
       height: 65,
       child: Row(
         children: [
-          // Back button
           IconButton(
             icon: const Icon(Icons.arrow_back, size: 28, color: dark),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
-
-          // Center title
           const Expanded(
             child: Center(
               child: Text(
@@ -192,8 +154,6 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
               ),
             ),
           ),
-
-          // Help button
           IconButton(
             icon: Container(
               width: 27,
@@ -215,16 +175,11 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
             ),
             onPressed: _showHelp,
           ),
-
           const SizedBox(width: 8),
         ],
       ),
     );
   }
-
-  // ============================================================
-  // ROLE CARD
-  // ============================================================
 
   Widget _buildRoleCard({
     required String role,
@@ -265,10 +220,6 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ==================================================
-            // LARGE IMAGE
-            // ==================================================
-
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
               child: ClipRRect(
@@ -294,16 +245,11 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                 ),
               ),
             ),
-
-            // ==================================================
-            // TEXT + SELECTION
-            // ==================================================
             Padding(
               padding: const EdgeInsets.fromLTRB(18, 17, 18, 18),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Icon
                   Container(
                     width: 58,
                     height: 58,
@@ -319,10 +265,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                       size: 30,
                     ),
                   ),
-
                   const SizedBox(width: 15),
-
-                  // Text
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -335,9 +278,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                             color: isSelected ? accentColor : dark,
                           ),
                         ),
-
                         const SizedBox(height: 5),
-
                         Text(
                           subtitle,
                           style: const TextStyle(
@@ -349,10 +290,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                       ],
                     ),
                   ),
-
                   const SizedBox(width: 10),
-
-                  // Selection circle
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 180),
                     width: 34,
@@ -378,10 +316,6 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
     );
   }
 
-  // ============================================================
-  // CONTINUE BUTTON
-  // ============================================================
-
   Widget _buildContinueButton() {
     final bool enabled = selectedRole != null;
 
@@ -391,7 +325,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
         width: double.infinity,
         height: 58,
         child: ElevatedButton(
-          onPressed: enabled ? _continue : null,
+          onPressed: enabled && !_isLoading ? _continue : null,
           style: ElevatedButton.styleFrom(
             backgroundColor: terracotta,
             disabledBackgroundColor: const Color(0xFFC8CEC8),
@@ -402,32 +336,63 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
               borderRadius: BorderRadius.circular(17),
             ),
           ),
-          child: const Text(
-            'Continue',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-          ),
+          child: _isLoading
+              ? const CircularProgressIndicator(color: Colors.white)
+              : const Text(
+                  'Continue',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
         ),
       ),
     );
   }
 
-  // ============================================================
-  // CONTINUE
-  // ============================================================
-
-  void _continue() {
+  Future<void> _continue() async {
     if (selectedRole == null) return;
 
-    if (selectedRole == 'artisan') {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const ArtisanHomeScreen()),
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await ApiService.register(
+        name: widget.name,
+        phone: widget.phone,
+        password: widget.password,
+        role: selectedRole!,
       );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const BuyerHomeScreen()),
-      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Account created successfully! Welcome!')),
+        );
+
+        if (selectedRole == 'artisan') {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const ArtisanHomeScreen()),
+            (route) => false,
+          );
+        } else {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const BuyerHomeScreen()),
+            (route) => false,
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registration failed: ${e.toString().replaceAll('Exception:', '')}')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
