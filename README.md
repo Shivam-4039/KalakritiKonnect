@@ -1,29 +1,61 @@
 # 🎨 KalakritiKonnect — AI-Driven Market Linkage & Smart Cataloging for Artisans
 
-> **Smart India Hackathon (SIH) Solution** | Backend API, Demand Radar & AI Engine
+> **Smart India Hackathon (SIH) Solution** | Complete Monorepo (Backend API & Flutter Frontend)
 
-An enterprise-grade AI backend service designed to empower traditional Indian artisans by converting voice descriptions and craft photos into structured marketplace listings, protecting artisans with cryptographic Fair Price Shields, providing seasonal Demand Radar analytics, and authenticating heritage craft items.
+An enterprise-grade AI solution designed to empower traditional Indian artisans by converting voice descriptions and craft photos into structured marketplace listings, protecting artisans with cryptographic Fair Price Shields, providing seasonal Demand Radar analytics, and authenticating heritage craft items.
 
 ---
 
-## 🌟 5 Core Innovation Features
+## 📁 Repository Structure
 
-### 1. 🎙️ AI Voice / Transcript Cataloging
+This repository is organized as a monorepo containing both the backend service and the mobile client application:
+- **Backend API**: Node.js & Express application powered by Google Gemini AI, MongoDB, Socket.io, Cloudinary, and Razorpay.
+- **Frontend App**: Flutter mobile/desktop application for artisans and buyers.
+
+---
+
+## 📱 Frontend Application (Flutter)
+
+A Flutter-based frontend client for artisans and buyers to interact with the KalakritiKonnect ecosystem.
+
+### Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
+- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
+
+---
+
+## ⚙️ Backend Service (Express.js & Node.js)
+
+The backend service coordinates AI processing, database management, real-time analytics, and payments.
+
+### 🌟 5 Core Innovation Features
+
+#### 1. 🎙️ AI Voice / Transcript Cataloging
 - Converts spoken transcripts in **Hindi**, **Hinglish**, or **English** into structured marketplace catalogs using Google Gemini AI (`gemini-1.5-flash`).
 - Automatically extracts product names (in English & Hindi), categories, craft techniques, raw materials, estimated production cost, production timeline, region, and fair minimum price.
 - Issues a tamper-proof, **HMAC-signed catalog draft token** (`catalogDraftToken`) to prevent client-side tampering before confirmation.
 
-### 2. 🛡️ Fair Price Protection Shield & Draft Confirmation
+#### 2. 🛡️ Fair Price Protection Shield & Draft Confirmation
 - Protects artisans from underpricing exploitation.
 - Server validates the signed `catalogDraftToken` to verify the original AI-evaluated fair minimum price (`aiMinPrice`).
 - If an artisan attempts to list an item below fair value, the API flags `isUnderpriced: true`, computes `fairPriceGap`, and issues a protective warning alert.
 
-### 3. 📡 Demand Radar Engine & Seasonal Insights
+#### 3. 📡 Demand Radar Engine & Seasonal Insights
 - Aggregates 30-day time-series product views, wishlist additions, search trends, and completed sales.
 - Incorporates real-time **Indian festive & seasonal multipliers** (Diwali, Holi, Rakhi, Wedding/Winter season).
 - Generates actionable category demand scores, top rising search tags, recommended crafts to make, and localized Hindi insights (`insightSummaryHindi`).
 
-### 4. 🏛️ Heritage Authenticity Score & Badging
+#### 4. 🏛️ Heritage Authenticity Score & Badging
 - Computes an automated 0–100 **Authenticity Score** for every craft product dynamically.
 - Automatically assigns verified credibility badges:
   - `GI Verified` / `GI Tag Declared` (+30 pts)
@@ -32,14 +64,14 @@ An enterprise-grade AI backend service designed to empower traditional Indian ar
   - `Handmade Technique Identified` (+25 pts)
   - `Fair Price Verified`
 
-### 5. 💬 WhatsApp Bot Multimodal Craft Cataloging
+#### 5. 💬 WhatsApp Bot Multimodal Craft Cataloging
 - Enables marginalized artisans without smartphones or complex apps to list items via WhatsApp.
 - Features **SSRF-protected safe image ingestion** (blocks private networks, enforces 8 MB size limits, validates MIME types).
 - Processes craft photos using Gemini multimodal vision and generates instant localized WhatsApp confirmation messages with suggested price ranges and confirmation tokens.
 
 ---
 
-## 🛠️ Tech Stack
+### 🛠️ Backend Tech Stack
 
 - **Runtime**: Node.js (v18+)
 - **Framework**: Express.js
@@ -51,7 +83,7 @@ An enterprise-grade AI backend service designed to empower traditional Indian ar
 
 ---
 
-## ⚙️ Environment Configuration (`.env`)
+### ⚙️ Environment Configuration (`.env`)
 
 Create a `.env` file in the root folder with the following variables:
 
@@ -84,19 +116,19 @@ RAZORPAY_KEY_SECRET=your_razorpay_secret
 
 ---
 
-## 🚀 Quick Start Guide
+### 🚀 Quick Start Guide
 
-### 1. Install Dependencies
+#### 1. Install Dependencies
 ```bash
 npm install
 ```
 
-### 2. Run the Development Server
+#### 2. Run the Development Server
 ```bash
 npm run dev
 ```
 
-### 3. Run in Production Mode
+#### 3. Run in Production Mode
 ```bash
 npm start
 ```
@@ -105,9 +137,9 @@ The API will be available at: `http://localhost:5000`
 
 ---
 
-## 📚 API Reference & Endpoints
+### 📚 API Reference & Endpoints
 
-### 1. Voice Cataloging
+#### 1. Voice Cataloging
 - **Endpoint**: `POST /api/catalog/voice-catalog`
 - **Auth**: `Bearer <artisan_jwt>` (Role: `artisan`)
 - **Body**:
@@ -138,9 +170,7 @@ The API will be available at: `http://localhost:5000`
 }
 ```
 
----
-
-### 2. Confirm Product Listing (with Fair Price Shield)
+#### 2. Confirm Product Listing (with Fair Price Shield)
 - **Endpoint**: `POST /api/catalog/confirm`
 - **Auth**: `Bearer <artisan_jwt>` (Role: `artisan`)
 - **Body**:
@@ -172,9 +202,7 @@ The API will be available at: `http://localhost:5000`
 }
 ```
 
----
-
-### 3. Demand Radar & Seasonal Insights
+#### 3. Demand Radar & Seasonal Insights
 - **Endpoint**: `GET /api/market/demand-insights`
 - **Auth**: Public
 - **Response**:
@@ -209,9 +237,7 @@ The API will be available at: `http://localhost:5000`
 }
 ```
 
----
-
-### 4. Product Details with Heritage Authenticity Score
+#### 4. Product Details with Heritage Authenticity Score
 - **Endpoint**: `GET /api/products/:id`
 - **Auth**: Public
 - **Response**:
@@ -243,9 +269,7 @@ The API will be available at: `http://localhost:5000`
 }
 ```
 
----
-
-### 5. WhatsApp Bot Craft Image Ingestion
+#### 5. WhatsApp Bot Craft Image Ingestion
 - **Endpoint**: `POST /api/catalog/whatsapp-bot`
 - **Headers**: `x-whatsapp-bot-secret: your_whatsapp_webhook_secret_here`
 - **Body**:
@@ -274,7 +298,7 @@ The API will be available at: `http://localhost:5000`
 
 ---
 
-## 🔒 Security & Architecture Highlights
+### 🔒 Security & Architecture Highlights
 
 1. **HMAC-SHA256 Signed Draft Tokens**: Fair price values cannot be altered on the client side; the server validates draft tokens using timing-safe cryptographic comparisons.
 2. **SSRF Protection**: Image URLs for the WhatsApp bot are strictly validated to block private IPv4/IPv6 ranges (e.g. `127.0.0.1`, `10.0.0.0/8`, `192.168.0.0/16`, `169.254.0.0/16`).
