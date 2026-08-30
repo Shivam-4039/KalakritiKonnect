@@ -1,20 +1,90 @@
+import 'package:flutter/material.dart';
+import '../../services/api_service.dart';
+import '../artisan/artisan_dashboard.dart';
+import '../buyer/buyer_home.dart';
 import 'otp_screen.dart';
 
-import 'package:flutter/material.dart';
-
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   static const Color primary = Color(0xFF3F704F);
   static const Color background = Color(0xFFF8F5EC);
   static const Color dark = Color(0xFF333333);
   static const Color muted = Color(0xFF666666);
 
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    final String phone = _phoneController.text.trim();
+    final String password = _passwordController.text.trim();
+
+    if (phone.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter phone/email and password.')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final response = await ApiService.login(phone: phone, password: password);
+      final String role = String(response['user']['role'] ?? 'artisan').toLowerCase();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Welcome back, ${response['user']['name']}!')),
+        );
+
+        if (role == 'artisan') {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const ArtisanHomeScreen()),
+            (route) => false,
+          );
+        } else {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const BuyerHomeScreen()),
+            (route) => false,
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login failed: ${e.toString().replaceAll('Exception:', '')}')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: background,
-
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -25,7 +95,6 @@ class LoginScreen extends StatelessWidget {
           },
         ),
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 28),
@@ -33,10 +102,6 @@ class LoginScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
-
-              // --------------------------------------------------
-              // PROGRESS DOTS
-              // --------------------------------------------------
               Center(
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -49,21 +114,19 @@ class LoginScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               const SizedBox(height: 20),
-
-              // --------------------------------------------------
-              // LOGO
-              // --------------------------------------------------
               Center(
                 child: Image.asset(
                   'assets/images/kklogo-removebg-preview.png',
                   width: 180,
+                  errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.auto_awesome,
+                    size: 80,
+                    color: primary,
+                  ),
                 ),
               ),
-
               const SizedBox(height: 35),
-
               const Text(
                 'Welcome Back!',
                 style: TextStyle(
@@ -72,24 +135,19 @@ class LoginScreen extends StatelessWidget {
                   color: primary,
                 ),
               ),
-
               const SizedBox(height: 8),
-
               const Text(
                 'Login to continue your KalaKriti journey.',
                 style: TextStyle(fontSize: 16, color: muted),
               ),
-
               const SizedBox(height: 30),
-
               const Text(
                 'Mobile Number / Email',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
               ),
-
               const SizedBox(height: 8),
-
               TextField(
+                controller: _phoneController,
                 decoration: InputDecoration(
                   hintText: 'Enter mobile number or email',
                   filled: true,
@@ -100,17 +158,14 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 20),
-
               const Text(
                 'Password',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
               ),
-
               const SizedBox(height: 8),
-
               TextField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: 'Enter password',
@@ -122,9 +177,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 12),
-
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -135,19 +188,12 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 10),
-
-              // --------------------------------------------------
-              // LOGIN BUTTON
-              // --------------------------------------------------
               SizedBox(
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // OTP screen will be connected here.
-                  },
+                  onPressed: _isLoading ? null : _handleLogin,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primary,
                     foregroundColor: Colors.white,
@@ -155,18 +201,15 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14),
                     ),
                   ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          'Login',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
                 ),
               ),
-
               const SizedBox(height: 20),
-
-              // --------------------------------------------------
-              // OR
-              // --------------------------------------------------
               Row(
                 children: const [
                   Expanded(child: Divider()),
@@ -177,12 +220,7 @@ class LoginScreen extends StatelessWidget {
                   Expanded(child: Divider()),
                 ],
               ),
-
               const SizedBox(height: 20),
-
-              // --------------------------------------------------
-              // GOOGLE
-              // --------------------------------------------------
               SizedBox(
                 width: double.infinity,
                 height: 55,
@@ -202,12 +240,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 25),
-
-              // --------------------------------------------------
-              // CREATE ACCOUNT
-              // --------------------------------------------------
               Center(
                 child: TextButton(
                   onPressed: () {
@@ -224,7 +257,6 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 20),
             ],
           ),
@@ -233,11 +265,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  // ------------------------------------------------------------
-  // PROGRESS DOT
-  // ------------------------------------------------------------
-
-  static Widget _progressDot(bool active) {
+  Widget _progressDot(bool active) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       width: active ? 17 : 5,

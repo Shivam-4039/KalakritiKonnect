@@ -1,5 +1,11 @@
+const path = require('path');
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+// Always load backend/.env no matter where terminal is opened from
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+console.log('Gemini key loaded:', !!process.env.GEMINI_API_KEY);
 
 const express = require('express');
 const cors = require('cors');
