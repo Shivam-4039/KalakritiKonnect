@@ -131,7 +131,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                 child: Image.asset(
                   'assets/images/kklogo-removebg-preview.png',
                   fit: BoxFit.contain,
-                  errorBuilder: (_, __, ___) {
+                  errorBuilder: (_, _, _) {
                     return const SizedBox.shrink();
                   },
                 ),
@@ -504,7 +504,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
 
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.06),
+                          color: Colors.black.withValues(alpha: 0.06),
                           blurRadius: 7,
                           offset: const Offset(0, 3),
                         ),
@@ -598,7 +598,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
               height: 64,
 
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.20),
+                color: Colors.white.withValues(alpha: 0.20),
                 shape: BoxShape.circle,
               ),
 
@@ -719,7 +719,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
             child: Icon(
               Icons.eco_outlined,
               size: 39,
-              color: cream.withOpacity(0.65),
+              color: cream.withValues(alpha: 0.65),
             ),
           ),
         ],
@@ -819,7 +819,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                 ),
 
                 decoration: BoxDecoration(
-                  color: terracotta.withOpacity(0.10),
+                  color: terracotta.withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(20),
                 ),
 

@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final response = await ApiService.login(phone: phone, password: password);
-      final String role = String(response['user']['role'] ?? 'artisan').toLowerCase();
+      final String role = (response['user']['role'] ?? 'artisan').toString().toLowerCase();
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

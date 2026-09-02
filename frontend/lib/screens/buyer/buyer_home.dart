@@ -294,7 +294,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
           child: Image.asset(
             'assets/images/kklogo-removebg-preview.png',
             fit: BoxFit.contain,
-            errorBuilder: (_, __, ___) {
+            errorBuilder: (_, _, _) {
               return const Icon(Icons.eco_outlined, color: primary, size: 30);
             },
           ),
@@ -385,7 +385,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
               width: 150,
               height: 150,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(.08),
+                color: Colors.white.withValues(alpha: .08),
                 shape: BoxShape.circle,
               ),
             ),
@@ -401,7 +401,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
               width: 125,
               height: 125,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(.06),
+                color: Colors.white.withValues(alpha: .06),
                 shape: BoxShape.circle,
               ),
             ),
@@ -417,7 +417,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(.13),
+                  color: Colors.white.withValues(alpha: .13),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: const Icon(
@@ -580,7 +580,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         itemCount: categories.length,
-        separatorBuilder: (_, __) {
+        separatorBuilder: (_, _) {
           return const SizedBox(width: 12);
         },
         itemBuilder: (context, index) {
@@ -632,7 +632,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                   width: 82,
                   height: 82,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) {
+                  errorBuilder: (_, _, _) {
                     return Container(
                       width: 82,
                       height: 82,

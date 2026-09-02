@@ -573,7 +573,7 @@ class _BuyerProfileScreenState extends State<BuyerProfileScreen> {
                     // LANGUAGE
                     // ------------------------------------------------
                     DropdownButtonFormField<String>(
-                      value: selectedLanguage,
+                      initialValue: selectedLanguage,
                       decoration: InputDecoration(
                         labelText: 'Preferred Language',
                         prefixIcon: const Icon(

@@ -68,7 +68,7 @@ class ProductDetailScreen extends StatelessWidget {
                       height: 82,
 
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withValues(alpha: 0.7),
                         shape: BoxShape.circle,
                       ),
 

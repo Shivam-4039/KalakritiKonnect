@@ -65,7 +65,7 @@ class _OtpScreenState extends State<OtpScreen> {
     });
 
     try {
-      await ApiService.sendOtp(phone: phone);
+      await ApiService.sendOtp(phone: phone, name: name);
       setState(() {
         _isOtpSent = true;
       });

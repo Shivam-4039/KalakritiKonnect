@@ -456,7 +456,7 @@ class CategoryProductsScreen extends StatelessWidget {
       child: Image.asset(
         info['image'] as String,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) {
+        errorBuilder: (_, _, _) {
           return Center(
             child: Icon(info['icon'] as IconData, color: primary, size: 70),
           );

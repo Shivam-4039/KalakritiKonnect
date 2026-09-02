@@ -196,7 +196,7 @@ class _CustomizationScreenState extends State<CustomizationScreen> {
       title: 'What would you like?',
       icon: Icons.handyman_outlined,
       child: DropdownButtonFormField<String>(
-        value: _selectedCraft,
+        initialValue: _selectedCraft,
 
         decoration: _inputDecoration(
           'Select craft type',
@@ -227,7 +227,7 @@ class _CustomizationScreenState extends State<CustomizationScreen> {
       title: 'Preferred colour',
       icon: Icons.palette_outlined,
       child: DropdownButtonFormField<String>(
-        value: _selectedColor,
+        initialValue: _selectedColor,
 
         decoration: _inputDecoration(
           'Choose a colour',

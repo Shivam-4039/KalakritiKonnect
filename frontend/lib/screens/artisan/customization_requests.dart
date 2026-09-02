@@ -123,7 +123,7 @@ class _CustomizationRequestsScreenState
             height: 52,
 
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.14),
+              color: Colors.white.withValues(alpha: 0.14),
               borderRadius: BorderRadius.circular(15),
             ),
 
@@ -535,8 +535,8 @@ class _CustomizationRequestsScreenState
 
               decoration: BoxDecoration(
                 color: status == 'Accepted'
-                    ? primary.withOpacity(0.08)
-                    : Colors.red.withOpacity(0.06),
+                    ? primary.withValues(alpha: 0.08)
+                    : Colors.red.withValues(alpha: 0.06),
 
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -653,9 +653,9 @@ class _CustomizationRequestsScreenState
 
       decoration: BoxDecoration(
         color: rejected
-            ? Colors.red.withOpacity(0.08)
+            ? Colors.red.withValues(alpha: 0.08)
             : accepted
-            ? primary.withOpacity(0.10)
+            ? primary.withValues(alpha: 0.10)
             : cream,
 
         borderRadius: BorderRadius.circular(20),

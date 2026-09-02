@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'add_product.dart';
 
-import 'package:flutter/material.dart';
 import '../../services/api_service.dart';
-import 'add_product.dart';
 
 class MyProductsScreen extends StatefulWidget {
   const MyProductsScreen({super.key});

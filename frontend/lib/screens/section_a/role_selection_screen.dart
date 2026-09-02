@@ -210,8 +210,8 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
           boxShadow: [
             BoxShadow(
               color: isSelected
-                  ? accentColor.withOpacity(0.15)
-                  : Colors.black.withOpacity(0.05),
+                  ? accentColor.withValues(alpha: 0.15)
+                  : Colors.black.withValues(alpha: 0.05),
               blurRadius: isSelected ? 18 : 10,
               offset: const Offset(0, 6),
             ),

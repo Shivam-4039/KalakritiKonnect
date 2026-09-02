@@ -446,7 +446,7 @@ class ExploreScreen extends StatelessWidget {
                   child: Image.asset(
                     image,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) {
+                    errorBuilder: (_, _, _) {
                       return Container(
                         color: cream,
                         alignment: Alignment.center,

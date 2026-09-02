@@ -677,7 +677,7 @@ class _ArtisanProfileScreenState extends State<ArtisanProfileScreen> {
             child: ListView.separated(
               itemCount: crafts.length,
 
-              separatorBuilder: (_, __) => const SizedBox(height: 5),
+              separatorBuilder: (_, _) => const SizedBox(height: 5),
 
               itemBuilder: (_, index) {
                 final craft = crafts[index];

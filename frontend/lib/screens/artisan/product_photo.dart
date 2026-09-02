@@ -29,9 +29,11 @@ class _ProductPhotoScreenState extends State<ProductPhotoScreen> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to capture image: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to capture image: $e')),
+        );
+      }
     }
   }
 

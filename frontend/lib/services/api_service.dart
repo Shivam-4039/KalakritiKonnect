@@ -69,8 +69,8 @@ class ApiService {
   /// Send OTP code
   static Future<Map<String, dynamic>> sendOtp({
     required String phone,
-    required String name,
-    required String role,
+    String? name,
+    String? role,
   }) async {
     final url = Uri.parse('${AppConstants.baseUrl}/auth/send-otp');
     final response = await http.post(
@@ -78,8 +78,8 @@ class ApiService {
       headers: _headers,
       body: jsonEncode({
         'phone': phone,
-        'name': name,
-        'role': role,
+        'name': ?name,
+        'role': ?role,
       }),
     );
 
@@ -154,7 +154,7 @@ class ApiService {
         'sellingPrice': sellingPrice,
         'underpriceWarningDismissed': underpriceWarningDismissed,
         'images': imageUrls,
-        if (giTag != null) 'giTag': giTag,
+        'giTag': ?giTag,
       }),
     );
 
@@ -187,8 +187,8 @@ class ApiService {
     double? maxPrice,
   }) async {
     final queryParams = {
-      if (category != null) 'category': category,
-      if (search != null) 'search': search,
+      'category': ?category,
+      'search': ?search,
       if (minPrice != null) 'minPrice': minPrice.toString(),
       if (maxPrice != null) 'maxPrice': maxPrice.toString(),
     };

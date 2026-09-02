@@ -1,7 +1,16 @@
-class AppConstants {
-  // Android emulator
-  static const String baseUrl = 'http://10.0.2.2:5000/api';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
-  // Physical phone on same WiFi (replace with your PC IP)
-  // static const String baseUrl = 'http://192.168.x.x:5000/api';
+class AppConstants {
+  static String get baseUrl {
+    if (kIsWeb) {
+      return 'http://localhost:5000/api';
+    }
+    try {
+      if (Platform.isAndroid) {
+        return 'http://10.0.2.2:5000/api';
+      }
+    } catch (_) {}
+    return 'http://localhost:5000/api';
+  }
 }

@@ -347,7 +347,7 @@ class ZoneExploreScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
 
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.96),
+            color: Colors.white.withValues(alpha: 0.96),
 
             borderRadius: BorderRadius.circular(16),
 
